@@ -1,0 +1,17 @@
+{
+  "name": "@victory/line",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ../../webpack.config.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@victory/core": "^0.0.1"
+  },
+  "types": "dist/types/index.d.ts",
+  "source": "src/index.ts"
+}
