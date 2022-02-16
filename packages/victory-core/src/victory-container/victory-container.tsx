@@ -3,14 +3,17 @@ import * as React from 'react';
 export interface VictoryContainerProps extends React.HTMLProps<SVGElement> {}
 
 const VictoryContainer = ({
-  width,
-  height,
   children,
+  className,
+  height = 300,
+  width = 450,
 }: VictoryContainerProps) => {
   return (
-    <svg width={width} height={height}>
-      {children}
-    </svg>
+    <div className={className}>
+      <svg width={width} height={height}>
+        {children}
+      </svg>
+    </div>
   );
 };
 

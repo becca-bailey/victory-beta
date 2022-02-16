@@ -4,7 +4,9 @@ import { VictoryContainer } from '@victory/core';
 const VictoryLine = () => {
   return (
     <VictoryContainer>
-      <text>Hello World</text>
+      <foreignObject x={0} y={0} height={100} width={100}>
+        Hello World
+      </foreignObject>
     </VictoryContainer>
   );
 };
