@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "module": "es6",
     "target": "es5",
+    "outDir": "./dist",
+    "module": "commonjs",
     "jsx": "react",
-    "allowJs": true,
-    "moduleResolution": "node"
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
