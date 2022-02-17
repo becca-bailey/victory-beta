@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { VictoryContainer } from '@victory/core';
+import { CommonProps } from '@victory/core/src/types';
+import { useVictoryState } from '@victory/core';
+import Curve from './curve';
 
-const VictoryLine = () => {
+interface VictoryLineProps extends CommonProps {}
+
+const VictoryLineData = ({ data }: VictoryLineProps) => {
+  const { setData } = useVictoryState();
+
+  React.useEffect(() => {
+    setData(data);
+  }, [data]);
+
+  return <Curve></Curve>;
+};
+
+const VictoryLine = (props: VictoryLineProps) => {
   return (
     <VictoryContainer>
-      <foreignObject x={0} y={0} height={100} width={100}>
-        Hello World
-      </foreignObject>
+      <VictoryLineData {...props}></VictoryLineData>
     </VictoryContainer>
   );
 };
