@@ -12,6 +12,11 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.WatchIgnorePlugin({
+      paths: [/\.js$/, /\.d\.ts$/],
+    }),
+  ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },

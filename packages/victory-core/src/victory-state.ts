@@ -1,53 +1,46 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
-import { ChartData, Coordinates, Datum, Scale } from './types';
 import * as d3 from 'd3';
-
-// Is there a way to provide a user-friendly error message if a user uses a custom container component
-// and doesn't include this state provider?
-type Domain = {
-  x: ChartData[];
-  y: ChartData[];
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { CommonProps, Coordinates, Datum, ForAxes, Range } from './types';
 
 export interface DataState {
-  domain: Domain;
-  width: number;
-  height: number;
+  data: Datum[];
 }
 
 interface StateType {
   data: DataState;
+  props: CommonProps;
 }
-
-const INITIAL_DATA_STATE: DataState = {
-  domain: {
-    x: [],
-    y: [],
-  },
-  width: 450,
-  height: 300,
-};
 
 const dataSlice = createSlice({
   name: 'data',
-  initialState: INITIAL_DATA_STATE,
+  initialState: { data: [] },
   reducers: {
     setData: (state, action: PayloadAction<Coordinates[]>) => {
-      // Handle domain from props
-      const xValues = action.payload.map(datum => datum.x);
-      const yValues = action.payload.map(datum => datum.y);
-      state.domain = {
-        x: state.domain.x.concat(xValues),
-        y: state.domain.x.concat(yValues),
-      };
+      state.data = action.payload;
     },
   },
+});
+
+const propsSlice = createSlice({
+  name: 'props',
+  initialState: {
+    width: 450,
+    height: 300,
+    padding: {
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+  },
+  reducers: {},
 });
 
 export const store = configureStore({
   reducer: {
     data: dataSlice.reducer,
+    props: propsSlice.reducer,
   },
 });
 
@@ -58,28 +51,26 @@ export function useVictoryState() {
     dispatch(dataSlice.actions.setData(data));
   }
 
-  const domain = useSelector<StateType, Domain>(state => state.data.domain);
-  const width = useSelector<StateType, number>(state => state.data.width);
-  const height = useSelector<StateType, number>(state => state.data.height);
+  const width = useSelector<StateType, number>(state => state.props.width);
+  const height = useSelector<StateType, number>(state => state.props.height);
+  const data = useSelector<StateType, Datum[]>(state => state.data.data);
 
-  const scale = useSelector<StateType, Scale>(state => {
-    const domain = state.data.domain;
-    const width = state.data.width;
-    const height = state.data.height;
-    const xScale = d3
-      .scaleLinear()
-      .domain(d3.extent(domain.x))
-      .range([0, width]);
-    const yScale = d3
-      .scaleLinear()
-      .domain(d3.extent(domain.y))
-      .range([height, 0]);
-
+  const domain = useSelector<StateType, ForAxes<Range>>(state => {
+    const { data } = state.data;
     return {
-      x: xScale,
-      y: yScale,
+      x: d3.extent(data.map(({ x }) => x)),
+      y: d3.extent(data.map(({ y }) => y)),
     };
   });
 
-  return { setData, domain, width, height, scale };
+  const range = useSelector<StateType, ForAxes<Range>>(state => {
+    const { padding, height, width } = state.props;
+    return {
+      x: [padding.left, width],
+      // Fix this
+      y: [height, padding.right],
+    };
+  });
+
+  return { setData, domain, width, height, range, data };
 }

@@ -4,21 +4,8 @@ import VictoryStateProvider from './victory-state-provider';
 
 export interface VictoryContainerProps extends React.HTMLProps<SVGElement> {}
 
-const VictorySVGContainer: React.FC = ({ children }) => {
+const VictoryContainer = ({ children, className }: VictoryContainerProps) => {
   const { width, height } = useVictoryState();
-  return (
-    <svg width={width} height={height}>
-      {children}
-    </svg>
-  );
-};
-
-const VictoryContainer = ({
-  children,
-  className,
-  height = 300,
-  width = 450,
-}: VictoryContainerProps) => {
   return (
     <VictoryStateProvider>
       <div className={className}>

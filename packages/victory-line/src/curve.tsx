@@ -8,7 +8,7 @@ interface CurveProps extends CommonProps {
 }
 
 const Curve = ({ data, pathComponent = <Path /> }: CurveProps) => {
-  const { scale } = useVictoryState();
+  // const { scale } = useVictoryState();
 
   // const lineFn = d3
   //   .line<Coordinates>()
