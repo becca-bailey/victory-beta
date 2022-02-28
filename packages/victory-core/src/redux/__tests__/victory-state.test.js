@@ -10,8 +10,8 @@ describe('useVictoryState', () => {
       wrapper: VictoryStateProvider,
     });
 
-    // expect(result.current.height).toEqual(INITIAL_HEIGHT);
-    // expect(result.current.width).toEqual(INITIAL_WIDTH);
+    expect(result.current.height).toEqual(INITIAL_HEIGHT);
+    expect(result.current.width).toEqual(INITIAL_WIDTH);
     expect(result.current.data).toEqual([]);
     expect(result.current.range).toEqual({ x: [0, 450], y: [300, 0] });
   });

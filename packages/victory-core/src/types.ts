@@ -17,11 +17,13 @@ export type Padding = {
   right: number;
 };
 
-export interface CommonProps {
+export interface ChartComponentProps {
   data?: Datum[];
   width?: number;
   height?: number;
   padding?: Padding;
+  className?: string;
+  dataComponent?: React.ReactElement;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;

@@ -8,7 +8,7 @@ interface CurveProps extends CommonProps {
   pathComponent?: React.ReactElement;
 }
 
-const Curve = ({ pathComponent = <Path /> }: CurveProps) => {
+const Curve = ({ pathComponent = <Path />, ...rest }: CurveProps) => {
   const { scale, data } = useVictoryState();
 
   const lineFn = d3
@@ -20,6 +20,7 @@ const Curve = ({ pathComponent = <Path /> }: CurveProps) => {
   return React.cloneElement(pathComponent, {
     d: lineFn(data),
     className: styles.curve,
+    ...rest,
   });
 };
 

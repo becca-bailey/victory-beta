@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { VictoryContainer, VictoryStateProvider } from '@victory/core';
-import { CommonProps } from '@victory/core/src/types';
+import { ChartComponentProps } from '@victory/core/src/types';
 import Curve from './curve';
 
-interface VictoryLineProps extends CommonProps {}
+interface VictoryLineProps extends ChartComponentProps {}
 
-const VictoryLine = ({ data }: VictoryLineProps) => {
+const VictoryLine = (props: VictoryLineProps) => {
+  const { dataComponent = <Curve /> } = props;
   return (
-    <VictoryStateProvider data={data}>
-      <VictoryContainer>
-        <Curve></Curve>
-      </VictoryContainer>
+    <VictoryStateProvider {...props}>
+      <VictoryContainer>{dataComponent}</VictoryContainer>
     </VictoryStateProvider>
   );
 };

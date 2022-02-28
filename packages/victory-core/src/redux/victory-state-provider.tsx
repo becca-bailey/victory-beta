@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { initialPropsSlice } from './victory-state';
 import { configureStore } from '@reduxjs/toolkit';
-import { CommonProps } from '../types';
+import { ChartComponentProps } from '../types';
 
-const defaultProps: CommonProps = {
+const defaultProps: ChartComponentProps = {
   data: [],
   width: 450,
   height: 300,
@@ -16,7 +16,7 @@ const defaultProps: CommonProps = {
   },
 };
 
-const VictoryStateProvider: React.FunctionComponent<CommonProps> = ({
+const VictoryStateProvider: React.FunctionComponent<ChartComponentProps> = ({
   children,
   ...props
 }) => {

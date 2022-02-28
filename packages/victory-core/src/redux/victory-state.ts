@@ -2,7 +2,7 @@ import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  CommonProps,
+  ChartComponentProps,
   Coordinates,
   Datum,
   ForAxes,
@@ -13,10 +13,10 @@ import {
 import * as React from 'react';
 
 export interface StateType {
-  initialProps: CommonProps;
+  initialProps: ChartComponentProps;
 }
 
-const initialState: CommonProps = {
+const initialState: ChartComponentProps = {
   data: [],
 };
 
@@ -30,12 +30,10 @@ export const initialPropsSlice = createSlice({
   },
 });
 
-export function useInitialProps() {
-  return useSelector((state: StateType) => state.initialProps);
-}
-
 export function useVictoryState() {
   const dispatch = useDispatch();
+
+  const initialProps = useSelector((state: StateType) => state.initialProps);
 
   function setData(data: Datum[]) {
     dispatch(initialPropsSlice.actions.setData(data));
@@ -76,5 +74,6 @@ export function useVictoryState() {
     range,
     scale,
     data,
+    ...initialProps,
   };
 }
