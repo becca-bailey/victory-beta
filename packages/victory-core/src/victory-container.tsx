@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useVictoryState } from '.';
 import { useInitialProps } from './redux/victory-state';
 
 export interface VictoryContainerProps extends React.HTMLProps<SVGElement> {}

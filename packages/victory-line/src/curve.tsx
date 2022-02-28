@@ -2,6 +2,7 @@ import { Path, useVictoryState } from '@victory/core';
 import { CommonProps, Coordinates } from '@victory/core/dist/types';
 import * as d3 from 'd3';
 import * as React from 'react';
+import styles from './curve.module.css';
 
 interface CurveProps extends CommonProps {
   pathComponent?: React.ReactElement;
@@ -18,8 +19,7 @@ const Curve = ({ pathComponent = <Path /> }: CurveProps) => {
 
   return React.cloneElement(pathComponent, {
     d: lineFn(data),
-    stroke: 'black',
-    fill: 'white',
+    className: styles.curve,
   });
 };
 
