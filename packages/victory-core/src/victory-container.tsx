@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { useVictoryState } from '.';
-import VictoryStateProvider from './victory-state-provider';
+import { useInitialProps } from './redux/victory-state';
 
 export interface VictoryContainerProps extends React.HTMLProps<SVGElement> {}
 
 const VictoryContainer = ({ children, className }: VictoryContainerProps) => {
-  const { width, height } = useVictoryState();
+  const { width, height } = useInitialProps();
   return (
-    <VictoryStateProvider>
-      <div className={className}>
-        <svg width={width} height={height}>
-          {children}
-        </svg>
-      </div>
-    </VictoryStateProvider>
+    <div className={className}>
+      <svg width={width} height={height}>
+        {children}
+      </svg>
+    </div>
   );
 };
 

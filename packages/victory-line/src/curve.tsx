@@ -7,16 +7,20 @@ interface CurveProps extends CommonProps {
   pathComponent?: React.ReactElement;
 }
 
-const Curve = ({ data, pathComponent = <Path /> }: CurveProps) => {
-  // const { scale } = useVictoryState();
+const Curve = ({ pathComponent = <Path /> }: CurveProps) => {
+  const { scale, data } = useVictoryState();
 
-  // const lineFn = d3
-  //   .line<Coordinates>()
-  //   .curve(d3.curveNatural)
-  //   .x(d => scale.x(d.x))
-  //   .y(d => scale.y(d.y));
+  const lineFn = d3
+    .line<Coordinates>()
+    .curve(d3.curveNatural)
+    .x(d => scale.x(d.x))
+    .y(d => scale.y(d.y));
 
-  return React.cloneElement(pathComponent, {});
+  return React.cloneElement(pathComponent, {
+    d: lineFn(data),
+    stroke: 'black',
+    fill: 'white',
+  });
 };
 
 export default Curve;

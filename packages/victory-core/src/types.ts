@@ -24,7 +24,7 @@ export interface CommonProps {
   padding?: Padding;
 }
 
-type ScaleFn = ScaleLinear<any, any>;
+export type ScaleFn = ScaleLinear<any, any>;
 
 // Rename this
 export type Range = [number, number];
