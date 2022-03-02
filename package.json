@@ -47,7 +47,8 @@
     "build": "npm run build --workspaces",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "jest"
+    "test": "jest",
+    "test.watch": "jest --watch"
   },
   "main": "index.js"
 }

@@ -1,10 +1,30 @@
+import { configureStore } from '@reduxjs/toolkit';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useVictoryState } from '../victory-state';
-import VictoryStateProvider from '../victory-state-provider';
+import { Provider } from 'react-redux';
 import { INITIAL_HEIGHT, INITIAL_WIDTH } from '../../constants';
+import { initialPropsSlice, useVictoryState } from '../victory-state';
 import * as React from 'react';
 
+function createTestStore() {
+  return configureStore({
+    reducer: {
+      initialProps: initialPropsSlice.reducer,
+    },
+  });
+}
+
 describe('useVictoryState', () => {
+  let store;
+
+  beforeEach(() => {
+    // Resets the store to default values
+    store = createTestStore();
+  });
+
+  function VictoryStateProvider({ children }) {
+    return <Provider store={store}>{children}</Provider>;
+  }
+
   it('returns default values', () => {
     const { result } = renderHook(() => useVictoryState(), {
       wrapper: VictoryStateProvider,
@@ -14,6 +34,24 @@ describe('useVictoryState', () => {
     expect(result.current.width).toEqual(INITIAL_WIDTH);
     expect(result.current.data).toEqual([]);
     expect(result.current.range).toEqual({ x: [0, 450], y: [300, 0] });
+  });
+
+  it('can set the initial props', () => {
+    const { result } = renderHook(() => useVictoryState(), {
+      wrapper: VictoryStateProvider,
+    });
+
+    act(() => {
+      result.current.setInitialProps({
+        height: 100,
+        width: 200,
+        data: [{ x: 1, y: 2 }],
+      });
+    });
+
+    expect(result.current.height).toEqual(100);
+    expect(result.current.width).toEqual(200);
+    expect(result.current.data).toEqual([{ x: 1, y: 2 }]);
   });
 
   it('can set the data', () => {
@@ -26,26 +64,6 @@ describe('useVictoryState', () => {
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ]);
-    });
-
-    expect(result.current.data).toHaveLength(2);
-  });
-
-  it('can pass in data through the provider', () => {
-    function VictoryStateProviderWithData({ children }) {
-      return (
-        <VictoryStateProvider
-          data={[
-            { x: 1, y: 2 },
-            { x: 3, y: 4 },
-          ]}
-        >
-          {children}
-        </VictoryStateProvider>
-      );
-    }
-    const { result } = renderHook(() => useVictoryState(), {
-      wrapper: VictoryStateProviderWithData,
     });
 
     expect(result.current.data).toHaveLength(2);

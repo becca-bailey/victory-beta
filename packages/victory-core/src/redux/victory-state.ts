@@ -16,16 +16,26 @@ export interface StateType {
   initialProps: ChartComponentProps;
 }
 
-const initialState: ChartComponentProps = {
-  data: [],
-};
-
 export const initialPropsSlice = createSlice({
   name: 'initialProps',
-  initialState,
+  initialState: {
+    data: [],
+    width: 450,
+    height: 300,
+    padding: {
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+  },
   reducers: {
     setData: (state, action: PayloadAction<Coordinates[]>) => {
       state.data = action.payload;
+    },
+    setInitialProps: (state, action: PayloadAction<ChartComponentProps>) => {
+      const updatedState = { ...state, ...action.payload };
+      return updatedState;
     },
   },
 });
@@ -35,13 +45,17 @@ export function useVictoryState() {
 
   const initialProps = useSelector((state: StateType) => state.initialProps);
 
+  function setInitialProps(props: ChartComponentProps) {
+    dispatch(initialPropsSlice.actions.setInitialProps(props));
+  }
+
   function setData(data: Datum[]) {
     dispatch(initialPropsSlice.actions.setData(data));
   }
 
-  const data = useSelector<StateType, Datum[]>(
-    state => state.initialProps.data
-  );
+  const data = useSelector<StateType, Datum[]>(state => {
+    return state.initialProps.data;
+  });
 
   const domain = useSelector<StateType, ForAxes<Range>>(state => {
     const { data } = state.initialProps;
@@ -69,6 +83,7 @@ export function useVictoryState() {
   });
 
   return {
+    setInitialProps,
     setData,
     domain,
     range,
@@ -77,3 +92,9 @@ export function useVictoryState() {
     ...initialProps,
   };
 }
+
+export const store = configureStore({
+  reducer: {
+    initialProps: initialPropsSlice.reducer,
+  },
+});

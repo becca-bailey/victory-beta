@@ -4,6 +4,11 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import VictoryLine from './src/victory-line';
 import Curve from './src/curve';
 import styled from 'styled-components';
+import {
+  useVictoryState,
+  VictoryStateProvider,
+  VictoryContainer,
+} from '@victory/core';
 
 const TEST_DATA = [
   { x: 1, y: 1 },
@@ -37,4 +42,52 @@ const StyledPath = styled.path`
 WithCustomPath.args = {
   data: TEST_DATA,
   dataComponent: <Curve pathComponent={<StyledPath />} />,
+};
+
+function generateData(count: number) {
+  const data = [];
+  for (let i = 0; i < count; i++) {
+    data.push({
+      x: i,
+      y: Math.random() * 10,
+    });
+  }
+  return data;
+}
+
+const length = 10;
+
+// TODO: This is really clunky
+const VictoryLineWithAnimation = args => {
+  const { setData } = useVictoryState();
+  return (
+    <div>
+      <VictoryContainer>
+        <VictoryLine {...args} />
+      </VictoryContainer>
+      <button onClick={() => setData(generateData(length))}>
+        Randomize data
+      </button>
+    </div>
+  );
+};
+
+export const WithAnimation = args => {
+  return (
+    <VictoryStateProvider>
+      <VictoryLineWithAnimation {...args} />
+    </VictoryStateProvider>
+  );
+};
+
+WithAnimation.args = {
+  standalone: false,
+  animate: true,
+  data: generateData(length),
+  padding: {
+    top: 40,
+    bottom: 40,
+    left: 10,
+    right: 10,
+  },
 };

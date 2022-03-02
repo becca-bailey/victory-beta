@@ -24,6 +24,8 @@ export interface ChartComponentProps {
   padding?: Padding;
   className?: string;
   dataComponent?: React.ReactElement;
+  containerComponent?: React.ReactElement;
+  standalone?: boolean;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;

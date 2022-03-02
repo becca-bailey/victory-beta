@@ -1,38 +1,14 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { initialPropsSlice } from './victory-state';
-import { configureStore } from '@reduxjs/toolkit';
-import { ChartComponentProps } from '../types';
+import { store } from './victory-state';
 
-const defaultProps: ChartComponentProps = {
-  data: [],
-  width: 450,
-  height: 300,
-  padding: {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-};
+interface VictoryStateProviderProps {
+  children: React.ReactNode;
+}
 
-const VictoryStateProvider: React.FunctionComponent<ChartComponentProps> = ({
-  children,
-  ...props
-}) => {
-  const initialProps = {
-    ...defaultProps,
-    ...props,
+const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
+  ({ children }) => {
+    return <Provider store={store}>{children}</Provider>;
   };
-  const store = configureStore({
-    reducer: {
-      initialProps: initialPropsSlice.reducer,
-    },
-    preloadedState: {
-      initialProps,
-    },
-  });
-  return <Provider store={store}>{children}</Provider>;
-};
 
 export default VictoryStateProvider;

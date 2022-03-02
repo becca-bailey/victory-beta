@@ -1,17 +1,44 @@
 import * as React from 'react';
-import { VictoryContainer, VictoryStateProvider } from '@victory/core';
+import {
+  useVictoryState,
+  VictoryContainer,
+  VictoryStateProvider,
+} from '@victory/core';
 import { ChartComponentProps } from '@victory/core/src/types';
 import Curve from './curve';
 
-interface VictoryLineProps extends ChartComponentProps {}
+function withContainer(
+  WrappedComponent: React.FunctionComponent<ChartComponentProps>
+) {
+  return (props: ChartComponentProps) => {
+    const { standalone = true, containerComponent = <VictoryContainer /> } =
+      props;
+    if (standalone) {
+      return (
+        <VictoryStateProvider>
+          {React.cloneElement(
+            containerComponent,
+            {},
+            <WrappedComponent {...props} />
+          )}
+        </VictoryStateProvider>
+      );
+    }
+    return <WrappedComponent {...props} />;
+  };
+}
 
-const VictoryLine = (props: VictoryLineProps) => {
-  const { dataComponent = <Curve /> } = props;
-  return (
-    <VictoryStateProvider {...props}>
-      <VictoryContainer>{dataComponent}</VictoryContainer>
-    </VictoryStateProvider>
-  );
+const VictoryLine = ({
+  dataComponent = <Curve />,
+  ...props
+}: ChartComponentProps) => {
+  const { data, scale, setInitialProps } = useVictoryState();
+
+  React.useEffect(() => {
+    setInitialProps(props);
+  }, []);
+
+  return React.cloneElement(dataComponent, { data, scaleFns: scale });
 };
 
-export default VictoryLine;
+export default withContainer(VictoryLine);
