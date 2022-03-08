@@ -13,12 +13,16 @@ import {
 import * as React from 'react';
 
 export interface StateType {
-  initialProps: ChartComponentProps;
+  chart: ChartComponentProps;
 }
 
-export const initialPropsSlice = createSlice({
-  name: 'initialProps',
+export const chartSlice = createSlice({
+  name: 'chart',
   initialState: {
+    isAnimating: false,
+    animate: false,
+    previousData: [],
+    nextData: [],
     data: [],
     width: 450,
     height: 300,
@@ -43,22 +47,27 @@ export const initialPropsSlice = createSlice({
 export function useVictoryState() {
   const dispatch = useDispatch();
 
-  const initialProps = useSelector((state: StateType) => state.initialProps);
+  const {
+    animate,
+    width,
+    height,
+    data: dataFromState,
+  } = useSelector((state: StateType) => state.chart);
 
   function setInitialProps(props: ChartComponentProps) {
-    dispatch(initialPropsSlice.actions.setInitialProps(props));
+    dispatch(chartSlice.actions.setInitialProps(props));
   }
 
   function setData(data: Datum[]) {
-    dispatch(initialPropsSlice.actions.setData(data));
+    dispatch(chartSlice.actions.setData(data));
   }
 
   const data = useSelector<StateType, Datum[]>(state => {
-    return state.initialProps.data;
+    return state.chart.data;
   });
 
   const domain = useSelector<StateType, ForAxes<Range>>(state => {
-    const { data } = state.initialProps;
+    const { data } = state.chart;
     return {
       x: d3.extent(data.map(({ x }) => x)),
       y: d3.extent(data.map(({ y }) => y)),
@@ -66,7 +75,7 @@ export function useVictoryState() {
   });
 
   const range = useSelector<StateType, ForAxes<Range>>(state => {
-    const { padding, height, width } = state.initialProps;
+    const { padding, height, width } = state.chart;
     return {
       x: [padding.left, width - padding.right],
       y: [height - padding.bottom, padding.top],
@@ -83,18 +92,20 @@ export function useVictoryState() {
   });
 
   return {
+    animate,
+    width,
+    height,
     setInitialProps,
     setData,
     domain,
     range,
     scale,
     data,
-    ...initialProps,
   };
 }
 
 export const store = configureStore({
   reducer: {
-    initialProps: initialPropsSlice.reducer,
+    chart: chartSlice.reducer,
   },
 });

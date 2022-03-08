@@ -2,13 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { Provider } from 'react-redux';
 import { INITIAL_HEIGHT, INITIAL_WIDTH } from '../../constants';
-import { initialPropsSlice, useVictoryState } from '../victory-state';
+import { chartSlice, useVictoryState } from '../victory-state';
 import * as React from 'react';
 
 function createTestStore() {
   return configureStore({
     reducer: {
-      initialProps: initialPropsSlice.reducer,
+      initialProps: chartSlice.reducer,
     },
   });
 }

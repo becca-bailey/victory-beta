@@ -26,6 +26,8 @@ export interface ChartComponentProps {
   dataComponent?: React.ReactElement;
   containerComponent?: React.ReactElement;
   standalone?: boolean;
+  // TODO
+  animate?: boolean;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;
