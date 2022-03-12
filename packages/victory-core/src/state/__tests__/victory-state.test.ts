@@ -1,30 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { Provider } from 'react-redux';
 import { INITIAL_HEIGHT, INITIAL_WIDTH } from '../../constants';
-import { chartSlice, useVictoryState } from '../victory-state';
+import { useVictoryState } from '../victory-state';
+import VictoryStateProvider from '../victory-state-provider';
 import * as React from 'react';
 
-function createTestStore() {
-  return configureStore({
-    reducer: {
-      initialProps: chartSlice.reducer,
-    },
-  });
-}
-
 describe('useVictoryState', () => {
-  let store;
-
-  beforeEach(() => {
-    // Resets the store to default values
-    store = createTestStore();
-  });
-
-  function VictoryStateProvider({ children }) {
-    return <Provider store={store}>{children}</Provider>;
-  }
-
   it('returns default values', () => {
     const { result } = renderHook(() => useVictoryState(), {
       wrapper: VictoryStateProvider,
@@ -32,26 +12,14 @@ describe('useVictoryState', () => {
 
     expect(result.current.height).toEqual(INITIAL_HEIGHT);
     expect(result.current.width).toEqual(INITIAL_WIDTH);
-    expect(result.current.data).toEqual([]);
+    expect(result.current.data).toEqual({});
+    expect(result.current.padding).toEqual({
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    });
     expect(result.current.range).toEqual({ x: [0, 450], y: [300, 0] });
-  });
-
-  it('can set the initial props', () => {
-    const { result } = renderHook(() => useVictoryState(), {
-      wrapper: VictoryStateProvider,
-    });
-
-    act(() => {
-      result.current.setInitialProps({
-        height: 100,
-        width: 200,
-        data: [{ x: 1, y: 2 }],
-      });
-    });
-
-    expect(result.current.height).toEqual(100);
-    expect(result.current.width).toEqual(200);
-    expect(result.current.data).toEqual([{ x: 1, y: 2 }]);
   });
 
   it('can set the data', () => {
@@ -60,13 +28,13 @@ describe('useVictoryState', () => {
     });
 
     act(() => {
-      result.current.setData([
+      result.current.setData('id', [
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ]);
     });
 
-    expect(result.current.data).toHaveLength(2);
+    expect(result.current.getData('id')).toHaveLength(2);
   });
 
   it('returns the domain based on the data', () => {
@@ -75,7 +43,7 @@ describe('useVictoryState', () => {
     });
 
     act(() => {
-      result.current.setData([
+      result.current.setData('id', [
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ]);
@@ -93,7 +61,7 @@ describe('useVictoryState', () => {
     });
 
     act(() => {
-      result.current.setData([
+      result.current.setData('id', [
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ]);

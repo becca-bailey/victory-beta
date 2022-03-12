@@ -18,6 +18,7 @@ export type Padding = {
 };
 
 export interface ChartComponentProps {
+  id?: string;
   data?: Datum[];
   width?: number;
   height?: number;
@@ -26,8 +27,7 @@ export interface ChartComponentProps {
   dataComponent?: React.ReactElement;
   containerComponent?: React.ReactElement;
   standalone?: boolean;
-  // TODO
-  animate?: boolean;
+  index?: number;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;
@@ -36,3 +36,10 @@ export type ScaleFn = ScaleLinear<any, any>;
 export type Range = [number, number];
 
 export type Scale = ForAxes<ScaleFn>;
+
+export type StateType = {
+  width: number;
+  height: number;
+  data: { [key: string]: Datum[] };
+  padding: Padding;
+};

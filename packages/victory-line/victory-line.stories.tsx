@@ -44,50 +44,68 @@ WithCustomPath.args = {
   dataComponent: <Curve pathComponent={<StyledPath />} />,
 };
 
-function generateData(count: number) {
-  const data = [];
-  for (let i = 0; i < count; i++) {
-    data.push({
-      x: i,
-      y: Math.random() * 10,
-    });
-  }
-  return data;
-}
-
-const length = 10;
-
-// TODO: This is really clunky
-const VictoryLineWithAnimation = args => {
-  const { setData } = useVictoryState();
-  return (
-    <div>
-      <VictoryContainer>
-        <VictoryLine {...args} />
-      </VictoryContainer>
-      <button onClick={() => setData(generateData(length))}>
-        Randomize data
-      </button>
-    </div>
-  );
-};
-
-export const WithAnimation = args => {
+export const WithMultipleLines = () => {
   return (
     <VictoryStateProvider>
-      <VictoryLineWithAnimation {...args} />
+      <VictoryContainer>
+        <VictoryLine id="one" standalone={false} data={TEST_DATA} />
+        <VictoryLine
+          id="two"
+          standalone={false}
+          data={[
+            { x: 1, y: 5 },
+            { x: 3, y: 1 },
+          ]}
+        />
+      </VictoryContainer>
     </VictoryStateProvider>
   );
 };
 
-WithAnimation.args = {
-  standalone: false,
-  animate: true,
-  data: generateData(length),
-  padding: {
-    top: 40,
-    bottom: 40,
-    left: 10,
-    right: 10,
-  },
-};
+// function generateData(count: number) {
+//   const data = [];
+//   for (let i = 0; i < count; i++) {
+//     data.push({
+//       x: i,
+//       y: Math.random() * 10,
+//     });
+//   }
+//   return data;
+// }
+
+// const length = 10;
+
+// // TODO: This is really clunky
+// const VictoryLineWithAnimation = args => {
+//   const { setData } = useVictoryState();
+//   return (
+//     <div>
+//       <VictoryContainer>
+//         <VictoryLine {...args} />
+//       </VictoryContainer>
+//       <button onClick={() => setData(generateData(length))}>
+//         Randomize data
+//       </button>
+//     </div>
+//   );
+// };
+
+// export const WithAnimation = args => {
+//   return (
+//     <VictoryStateProvider>
+//       <VictoryLineWithAnimation {...args} />
+//     </VictoryStateProvider>
+//   );
+// };
+
+// WithAnimation.args = {
+//   standalone: false,
+//   animate: true,
+//   data: generateData(length),
+//   padding: {
+//     top: 40,
+//     bottom: 40,
+//     left: 10,
+//     right: 10,
+//   },
+// };

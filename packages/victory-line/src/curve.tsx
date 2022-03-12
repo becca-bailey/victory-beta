@@ -7,20 +7,21 @@ import styles from './curve.module.css';
 interface CurveProps extends React.SVGProps<SVGPathElement> {
   pathComponent?: React.ReactElement;
   data?: Coordinates[];
-  scaleFns?: ForAxes<ScaleFn>;
+  // This prop is renamed so it doesn't conflict with the existing SVG path props interface
+  victoryScale?: ForAxes<ScaleFn>;
 }
 
 const Curve = ({
   pathComponent = <Path />,
   data = [],
-  scaleFns = { x: d3.scaleLinear(), y: d3.scaleLinear() },
+  victoryScale = { x: d3.scaleLinear(), y: d3.scaleLinear() },
   ...rest
 }: CurveProps) => {
   const lineFn = d3
     .line<Coordinates>()
     .curve(d3.curveNatural)
-    .x(d => scaleFns.x(d.x))
-    .y(d => scaleFns.y(d.y));
+    .x(d => victoryScale.x(d.x))
+    .y(d => victoryScale.y(d.y));
 
   return React.cloneElement(pathComponent, {
     d: lineFn(data),
