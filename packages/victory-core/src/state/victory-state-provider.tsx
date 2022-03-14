@@ -5,7 +5,7 @@ import { createContext } from 'use-context-selector';
 
 interface VictoryStateProviderProps {
   children: React.ReactNode;
-  initialState?: Partial<StateType>;
+  initialProps?: Partial<StateType>;
 }
 
 export const VictoryContext = createContext(null);
@@ -28,10 +28,10 @@ export type ContextType = [
 ];
 
 const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
-  ({ children, initialState = {} }) => {
+  ({ children, initialProps = {} }) => {
     const contextValue = React.useState<StateType>({
+      ...initialProps,
       ...defaults,
-      ...initialState,
     });
     return (
       <VictoryContext.Provider value={contextValue}>

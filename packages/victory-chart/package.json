@@ -1,0 +1,21 @@
+{
+  "name": "@victory/chart",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ../../webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/becca-bailey/victory-beta.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/becca-bailey/victory-beta/issues"
+  },
+  "homepage": "https://github.com/becca-bailey/victory-beta#readme"
+}

@@ -1,4 +1,5 @@
 import { ScaleLinear } from 'd3-scale';
+import React from 'react';
 
 export type ChartData = number;
 
@@ -28,6 +29,7 @@ export interface ChartComponentProps {
   containerComponent?: React.ReactElement;
   standalone?: boolean;
   index?: number;
+  children?: React.ReactNode;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;

@@ -6,7 +6,10 @@ import { ContextType, VictoryContext } from './victory-state-provider';
 export interface StateType {}
 
 export function useVictoryState() {
-  const context = useContextSelector(VictoryContext, context => context);
+  const context = useContextSelector<ContextType, ContextType>(
+    VictoryContext,
+    context => context
+  );
 
   if (!context) {
     throw new Error('useVictoryState must be used within a VictoryContext');
@@ -14,7 +17,11 @@ export function useVictoryState() {
 
   const [state, setState] = context;
 
+  // TODO: Use immer?
   const setData = (id: string, data: Datum[]) => {
+    // If the new data is different from the previous data and animate is true but we are not currently animating
+    // start the animation
+    // Otherwise, set the data
     setState(s => ({ ...s, data: { ...s.data, [id]: data } }));
   };
 
