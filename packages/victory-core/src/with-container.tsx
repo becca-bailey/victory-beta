@@ -10,13 +10,11 @@ export function withContainer(
     const {
       standalone = true,
       containerComponent = <VictoryContainer />,
-      width,
-      height,
-      padding,
+      ...rest
     } = props;
     if (standalone) {
       return (
-        <VictoryStateProvider initialProps={{ width, height, padding }}>
+        <VictoryStateProvider initialProps={rest}>
           {React.cloneElement(
             containerComponent,
             {},

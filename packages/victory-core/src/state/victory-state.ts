@@ -1,9 +1,30 @@
-import * as d3 from 'd3';
 import { useContextSelector } from 'use-context-selector';
-import { Datum, ForAxes, Range } from '../types';
-import { ContextType, VictoryContext } from './victory-state-provider';
+import { VictoryContext } from './victory-state-provider';
+import { ContextType, Datum, ForAxes, ScaleFn } from '../types';
 
-export interface StateType {}
+export function useChartData(id: string) {
+  const data = useContextSelector<ContextType, Datum[]>(
+    VictoryContext,
+    ({ getData }) => getData(id)
+  );
+
+  const setData = useContextSelector<ContextType, (data: Datum[]) => void>(
+    VictoryContext,
+    ({ setData }) =>
+      (data: Datum[]) =>
+        setData(id, data)
+  );
+
+  return { data, setData };
+}
+
+export function useScale() {
+  const scale = useContextSelector<ContextType, ForAxes<ScaleFn>>(
+    VictoryContext,
+    ({ scale }) => scale
+  );
+  return scale;
+}
 
 export function useVictoryState() {
   const context = useContextSelector<ContextType, ContextType>(
@@ -15,45 +36,5 @@ export function useVictoryState() {
     throw new Error('useVictoryState must be used within a VictoryContext');
   }
 
-  const [state, setState] = context;
-
-  // TODO: Use immer?
-  const setData = (id: string, data: Datum[]) => {
-    // If the new data is different from the previous data and animate is true but we are not currently animating
-    // start the animation
-    // Otherwise, set the data
-    setState(s => ({ ...s, data: { ...s.data, [id]: data } }));
-  };
-
-  const getData = (id: string) => state.data[id];
-
-  // Calculated values
-
-  const allData = useContextSelector<ContextType, Datum[]>(
-    VictoryContext,
-    ([{ data }]) => Object.values(data).reduce((acc, d) => acc.concat(d), [])
-  );
-
-  const range = useContextSelector<ContextType, ForAxes<Range>>(
-    VictoryContext,
-    ([{ width, height, padding }]) => {
-      return {
-        x: [padding.left, width - padding.right],
-        y: [height - padding.bottom, padding.top],
-      };
-    }
-  );
-
-  // Do these need to be memoized?
-  const domain = {
-    x: d3.extent(allData.map(({ x }) => x)),
-    y: d3.extent(allData.map(({ y }) => y)),
-  };
-
-  const scale = {
-    x: d3.scaleLinear().domain(domain.x).range(range.x),
-    y: d3.scaleLinear().domain(domain.y).range(range.y),
-  };
-
-  return { setData, getData, domain, range, scale, ...state };
+  return context;
 }

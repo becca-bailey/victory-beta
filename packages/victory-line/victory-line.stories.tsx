@@ -71,9 +71,7 @@ export const WithAnimation = args => {
   const [data, setData] = React.useState(args.data);
   return (
     <div>
-      <VictoryChart>
-        <VictoryLine {...args} data={data} />
-      </VictoryChart>
+      <VictoryLine {...args} data={data} />
       <button onClick={() => setData(generateData(length))}>
         Randomize data
       </button>

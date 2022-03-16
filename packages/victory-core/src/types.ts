@@ -30,18 +30,36 @@ export interface ChartComponentProps {
   standalone?: boolean;
   index?: number;
   children?: React.ReactNode;
+  range?: ForAxes<Extent>;
+  domain?: ForAxes<Extent>;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;
 
 // Rename this
-export type Range = [number, number];
+export type Extent = [number, number];
 
 export type Scale = ForAxes<ScaleFn>;
+
+export type ChartState = {
+  data: Datum[];
+  animating: boolean;
+};
 
 export type StateType = {
   width: number;
   height: number;
-  data: { [key: string]: Datum[] };
   padding: Padding;
+  chartStates: { [key: string]: ChartState };
+};
+
+export type ContextType = {
+  width: number;
+  height: number;
+  padding: Padding;
+  range: ForAxes<Extent>;
+  domain: ForAxes<Extent>;
+  scale: ForAxes<ScaleFn>;
+  setData: (id: string, data: Datum[]) => void;
+  getData: (id: string) => Datum[];
 };

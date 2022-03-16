@@ -1,28 +1,27 @@
-import * as React from 'react';
-import { useVictoryState, withContainer } from '@victory/core';
+import { useChartData, useScale, withContainer } from '@victory/core';
 import { ChartComponentProps } from '@victory/core/src/types';
+import * as React from 'react';
 import Curve from './curve';
 
 const VictoryLine = ({
   dataComponent = <Curve />,
-  data = [],
+  data: initialData = [],
   id: idFromProps,
   index,
 }: ChartComponentProps) => {
-  const { getData, setData, scale } = useVictoryState();
-
   const id = React.useMemo(() => {
     return idFromProps || `victory-line-${index}`;
   }, [idFromProps, index]);
 
+  const { data, setData } = useChartData(id);
+  const scale = useScale();
+
   React.useEffect(() => {
-    if (data !== getData(id)) {
-      setData(id, data);
-    }
-  }, [id, data]);
+    setData(initialData);
+  }, [initialData]);
 
   return React.cloneElement(dataComponent, {
-    data: getData(id),
+    data,
     victoryScale: scale,
   });
 };

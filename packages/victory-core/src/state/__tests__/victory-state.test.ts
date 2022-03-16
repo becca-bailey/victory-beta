@@ -12,7 +12,6 @@ describe('useVictoryState', () => {
 
     expect(result.current.height).toEqual(INITIAL_HEIGHT);
     expect(result.current.width).toEqual(INITIAL_WIDTH);
-    expect(result.current.data).toEqual({});
     expect(result.current.padding).toEqual({
       top: 0,
       bottom: 0,
