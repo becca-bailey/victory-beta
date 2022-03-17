@@ -7,14 +7,11 @@ export function withContainer(
   WrappedComponent: React.FunctionComponent<ChartComponentProps>
 ) {
   return (props: ChartComponentProps) => {
-    const {
-      standalone = true,
-      containerComponent = <VictoryContainer />,
-      ...rest
-    } = props;
+    const { standalone = true, containerComponent = <VictoryContainer /> } =
+      props;
     if (standalone) {
       return (
-        <VictoryStateProvider initialProps={rest}>
+        <VictoryStateProvider initialProps={props}>
           {React.cloneElement(
             containerComponent,
             {},

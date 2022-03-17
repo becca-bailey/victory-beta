@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import * as React from 'react';
 import { createContext } from 'use-context-selector';
 import {
+  AnimatePropType,
   ChartComponentProps,
   ContextType,
   Datum,
@@ -22,12 +23,15 @@ function reducer(state: StateType, action: Action) {
   switch (action.type) {
     case 'setData': {
       const { data, id } = action;
+      const chartState = state.chartStates[id];
+      // if state.animate is true and animating is false
+      // Set animating to true and set previous and next data
       return {
         ...state,
         chartStates: {
           ...state.chartStates,
           [id]: {
-            ...state.chartStates[id],
+            ...chartState,
             data,
           },
         },
@@ -88,6 +92,9 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
     }, [allData, props.domain]);
 
     const scale = React.useMemo(() => {
+      if (props.scale) {
+        return props.scale;
+      }
       const { x, y } = range;
       const { x: xDomain, y: yDomain } = domain;
       return {
@@ -95,6 +102,16 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
         y: d3.scaleLinear().domain(yDomain).range(y),
       };
     }, [range, domain]);
+
+    // TODO: This can be chart-specific
+    const animate = React.useMemo(() => {
+      if (typeof props.animate === 'boolean' && props.animate === true) {
+        return {
+          duration: 500,
+        };
+      }
+      return props.animate || undefined;
+    }, [props.animate]);
 
     const setData = React.useCallback(
       (id: string, data: Datum[]) => {
@@ -119,6 +136,7 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       padding,
       width,
       height,
+      animate,
     };
 
     return (

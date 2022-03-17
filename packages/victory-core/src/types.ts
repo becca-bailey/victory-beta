@@ -18,6 +18,10 @@ export type Padding = {
   right: number;
 };
 
+export type AnimatePropType = {
+  duration: number;
+};
+
 export interface ChartComponentProps {
   id?: string;
   data?: Datum[];
@@ -30,8 +34,10 @@ export interface ChartComponentProps {
   standalone?: boolean;
   index?: number;
   children?: React.ReactNode;
+  scale?: ForAxes<ScaleFn>;
   range?: ForAxes<Extent>;
   domain?: ForAxes<Extent>;
+  animate?: boolean | AnimatePropType;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;
@@ -60,6 +66,7 @@ export type ContextType = {
   range: ForAxes<Extent>;
   domain: ForAxes<Extent>;
   scale: ForAxes<ScaleFn>;
+  animate: AnimatePropType | undefined;
   setData: (id: string, data: Datum[]) => void;
   getData: (id: string) => Datum[];
 };
