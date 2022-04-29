@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import * as React from 'react';
 import { createContext } from 'use-context-selector';
 import {
-  AnimatePropType,
   ChartComponentProps,
   ContextType,
   Datum,
@@ -17,15 +16,25 @@ interface VictoryStateProviderProps {
 
 export const VictoryContext = createContext(null);
 
-type Action = { type: 'setData'; data: Datum[]; id: string };
+type Action =
+  | { type: 'setData'; data: Datum[]; id: string }
+  | {
+      type: 'startTransition';
+      id: string;
+      from: Datum[];
+      to: Datum[];
+      duration: number;
+    }
+  | {
+      type: 'endTransition';
+      id: string;
+    };
 
 function reducer(state: StateType, action: Action) {
   switch (action.type) {
     case 'setData': {
       const { data, id } = action;
       const chartState = state.chartStates[id];
-      // if state.animate is true and animating is false
-      // Set animating to true and set previous and next data
       return {
         ...state,
         chartStates: {
@@ -37,8 +46,40 @@ function reducer(state: StateType, action: Action) {
         },
       };
     }
+    case 'startTransition': {
+      const { id, from, to, duration } = action;
+      const chartState = state.chartStates[id];
+      return {
+        ...state,
+        chartStates: {
+          ...state.chartStates,
+          [id]: {
+            ...chartState,
+            animating: true,
+            previousData: from,
+            nextData: to,
+            duration,
+          },
+        },
+      };
+    }
+    case 'endTransition': {
+      const { id } = action;
+      const chartState = state.chartStates[id];
+      return {
+        ...state,
+        chartStates: {
+          ...state.chartStates,
+          [id]: {
+            ...chartState,
+            animating: false,
+            data: chartState.nextData,
+          },
+        },
+      };
+    }
     default:
-      throw new Error(`Unrecognized action type: ${action.type}`);
+      throw new Error(`Unrecognized action type: ${(action as Action).type}`);
   }
 }
 
@@ -127,6 +168,65 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       [state.chartStates]
     );
 
+    const getState = React.useCallback(
+      (id: string) => {
+        return (
+          state.chartStates[id] || {
+            data: [],
+            done: false,
+            animating: false,
+            duration: 0,
+          }
+        );
+      },
+      [state.chartStates]
+    );
+
+    const startTransition = React.useCallback(
+      (id: string, data: Datum[]) => {
+        if (!animate) {
+          return;
+        }
+        dispatch({
+          type: 'startTransition',
+          id,
+          from: getData(id),
+          to: data,
+          duration: animate.duration,
+        });
+      },
+      [dispatch, getData, animate]
+    );
+
+    const endTransition = React.useCallback(
+      (id: string) => {
+        dispatch({
+          type: 'endTransition',
+          id,
+        });
+      },
+      [dispatch, getData, animate]
+    );
+
+    const shouldStartAnimating = React.useCallback(
+      id => {
+        const chartState = state.chartStates[id];
+        if (!chartState || !animate) {
+          return false;
+        }
+        return !chartState.animating;
+      },
+      [state, animate]
+    );
+
+    const isAnimating = React.useCallback(
+      id => {
+        const chartState = state.chartStates[id];
+        return chartState?.animating;
+      },
+      [state]
+    );
+
     const value: ContextType = {
       domain,
       scale,
@@ -137,6 +237,11 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       width,
       height,
       animate,
+      startTransition,
+      endTransition,
+      shouldStartAnimating,
+      isAnimating,
+      getState,
     };
 
     return (

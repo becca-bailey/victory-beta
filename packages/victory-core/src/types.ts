@@ -22,22 +22,45 @@ export type AnimatePropType = {
   duration: number;
 };
 
+export type InterpolationOptions =
+  | 'basis'
+  | 'basisClosed'
+  | 'basisOpen'
+  | 'bundle'
+  | 'cardinal'
+  | 'cardinalClosed'
+  | 'cardinalOpen'
+  | 'catmullRom'
+  | 'catmullRomClosed'
+  | 'catmullRomOpen'
+  | 'linear'
+  | 'linearClosed'
+  | 'monotoneX'
+  | 'monotoneY'
+  | 'natural'
+  | 'radial'
+  | 'step'
+  | 'stepAfter'
+  | 'stepBefore';
+
 export interface ChartComponentProps {
-  id?: string;
+  animate?: boolean | AnimatePropType;
+  children?: React.ReactNode;
+  className?: string;
+  containerComponent?: React.ReactElement;
   data?: Datum[];
-  width?: number;
+  dataComponent?: React.ReactElement;
+  domain?: ForAxes<Extent>;
+  groupComponent?: React.ReactElement;
+  id?: string;
+  index?: number;
+  interpolation?: InterpolationOptions | Function;
   height?: number;
   padding?: Padding;
-  className?: string;
-  dataComponent?: React.ReactElement;
-  containerComponent?: React.ReactElement;
-  standalone?: boolean;
-  index?: number;
-  children?: React.ReactNode;
-  scale?: ForAxes<ScaleFn>;
   range?: ForAxes<Extent>;
-  domain?: ForAxes<Extent>;
-  animate?: boolean | AnimatePropType;
+  scale?: ForAxes<ScaleFn>;
+  standalone?: boolean;
+  width?: number;
 }
 
 export type ScaleFn = ScaleLinear<any, any>;
@@ -47,9 +70,16 @@ export type Extent = [number, number];
 
 export type Scale = ForAxes<ScaleFn>;
 
-export type ChartState = {
-  data: Datum[];
+export type AnimationState = {
   animating: boolean;
+  previousData?: Datum[];
+  nextData?: Datum[];
+  duration: number;
+  done: boolean;
+};
+
+export type ChartState = AnimationState & {
+  data: Datum[];
 };
 
 export type StateType = {
@@ -69,4 +99,9 @@ export type ContextType = {
   animate: AnimatePropType | undefined;
   setData: (id: string, data: Datum[]) => void;
   getData: (id: string) => Datum[];
+  getState: (id: string) => ChartState;
+  startTransition: (id: string, data: Datum[]) => void;
+  endTransition: (id: string) => void;
+  shouldStartAnimating: (id: string) => boolean;
+  isAnimating: (id: string) => boolean;
 };
