@@ -71,11 +71,10 @@ export type Extent = [number, number];
 export type Scale = ForAxes<ScaleFn>;
 
 export type AnimationState = {
-  animating: boolean;
+  animating?: boolean;
   previousData?: Datum[];
   nextData?: Datum[];
-  duration: number;
-  done: boolean;
+  duration?: number;
 };
 
 export type ChartState = AnimationState & {

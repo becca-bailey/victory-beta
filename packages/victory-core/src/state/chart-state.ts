@@ -4,7 +4,7 @@ import { useContextSelector } from 'use-context-selector';
 import { Datum, ChartState, ContextType } from '../types';
 import { VictoryContext } from './victory-state-provider';
 
-export function useChartState(id: string) {
+export function useChartState(id: string, _nextData: Datum[]) {
   const data = useContextSelector<ContextType, Datum[]>(
     VictoryContext,
     ({ getData }) => {
@@ -47,6 +47,7 @@ export function useChartState(id: string) {
     return getState(id);
   });
 
+  // Transitions between data states
   React.useEffect(() => {
     if (animating) {
       const interpolator = d3.interpolate(previousData, nextData);
@@ -66,11 +67,19 @@ export function useChartState(id: string) {
     }
   }, [animating, duration]);
 
+  // Kicks off animation if the data has changed and there are animation props provided
+  React.useEffect(() => {
+    if (data !== _nextData) {
+      if (shouldStartAnimating) {
+        startTransition(_nextData);
+      } else {
+        setData(_nextData);
+      }
+    }
+  }, [_nextData, data, shouldStartAnimating]);
+
   return {
     data,
     setData,
-    shouldStartAnimating,
-    startTransition,
-    endTransition,
   };
 }

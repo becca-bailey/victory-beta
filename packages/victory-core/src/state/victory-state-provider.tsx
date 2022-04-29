@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createContext } from 'use-context-selector';
 import {
   ChartComponentProps,
+  ChartState,
   ContextType,
   Datum,
   Extent,
@@ -15,6 +16,8 @@ interface VictoryStateProviderProps {
 }
 
 export const VictoryContext = createContext(null);
+
+const DEFAULT_STATE: ChartState = { data: [] };
 
 type Action =
   | { type: 'setData'; data: Datum[]; id: string }
@@ -161,25 +164,19 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       [dispatch]
     );
 
-    const getData = React.useCallback(
+    const getState = React.useCallback<(id: string) => ChartState>(
       (id: string) => {
-        return state.chartStates[id]?.data || [];
+        return state.chartStates[id] || DEFAULT_STATE;
       },
       [state.chartStates]
     );
 
-    const getState = React.useCallback(
+    const getData = React.useCallback<(id: string) => Datum[]>(
       (id: string) => {
-        return (
-          state.chartStates[id] || {
-            data: [],
-            done: false,
-            animating: false,
-            duration: 0,
-          }
-        );
+        const state = getState(id);
+        return state.data;
       },
-      [state.chartStates]
+      [getState]
     );
 
     const startTransition = React.useCallback(

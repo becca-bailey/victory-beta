@@ -12,19 +12,8 @@ const VictoryLine = ({
     return props.id || `victory-line-${index}`;
   }, [props.id, index]);
 
-  const { data, setData, shouldStartAnimating, startTransition } =
-    useChartState(id);
+  const { data } = useChartState(id, props.data);
   const { scale } = useVictoryState();
-
-  React.useEffect(() => {
-    if (data !== props.data) {
-      if (shouldStartAnimating) {
-        startTransition(props.data);
-      } else {
-        setData(props.data);
-      }
-    }
-  }, [props.data, data, shouldStartAnimating]);
 
   return React.cloneElement(dataComponent, {
     data,
