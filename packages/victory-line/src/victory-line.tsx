@@ -1,36 +1,30 @@
-import {
-  useChartData,
-  useScale,
-  withContainer,
-  useAnimationState,
-} from '@victory/core';
+import { useChartState, useVictoryState, withContainer } from '@victory/core';
 import { ChartComponentProps } from '@victory/core/src/types';
 import * as React from 'react';
 import Curve from './curve';
 
 const VictoryLine = ({
   dataComponent = <Curve />,
-  data: nextData = [],
-  id: idFromProps,
   index,
+  ...props
 }: ChartComponentProps) => {
   const id = React.useMemo(() => {
-    return idFromProps || `victory-line-${index}`;
-  }, [idFromProps, index]);
+    return props.id || `victory-line-${index}`;
+  }, [props.id, index]);
 
-  const { data, setData } = useChartData(id);
-  const { shouldStartAnimating, startTransition } = useAnimationState(id);
-  const scale = useScale();
+  const { data, setData, shouldStartAnimating, startTransition } =
+    useChartState(id);
+  const { scale } = useVictoryState();
 
   React.useEffect(() => {
-    if (data !== nextData) {
+    if (data !== props.data) {
       if (shouldStartAnimating) {
-        startTransition(nextData);
+        startTransition(props.data);
       } else {
-        setData(nextData);
+        setData(props.data);
       }
     }
-  }, [nextData, data, shouldStartAnimating]);
+  }, [props.data, data, shouldStartAnimating]);
 
   return React.cloneElement(dataComponent, {
     data,

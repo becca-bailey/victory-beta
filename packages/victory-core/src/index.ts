@@ -6,11 +6,7 @@ export {
   default as VictoryStateProvider,
   VictoryContext,
 } from './state/victory-state-provider';
-export {
-  useVictoryState,
-  useScale,
-  useChartData,
-  useAnimationState,
-} from './state/victory-state';
+export { useVictoryState } from './state/victory-state';
+export { useChartState } from './state/chart-state';
 export { default as Path } from './victory-primitives/path';
 export { withContainer } from './with-container';
