@@ -216,14 +216,6 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       [state, animate]
     );
 
-    const isAnimating = React.useCallback(
-      id => {
-        const chartState = state.chartStates[id];
-        return chartState?.animating;
-      },
-      [state]
-    );
-
     const value: ContextType = {
       domain,
       scale,
@@ -237,7 +229,6 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       startTransition,
       endTransition,
       shouldStartAnimating,
-      isAnimating,
       getState,
     };
 

@@ -102,5 +102,4 @@ export type ContextType = {
   startTransition: (id: string, data: Datum[]) => void;
   endTransition: (id: string) => void;
   shouldStartAnimating: (id: string) => boolean;
-  isAnimating: (id: string) => boolean;
 };
