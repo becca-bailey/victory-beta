@@ -25,7 +25,6 @@ const VictoryLine = ({
   React.useEffect(() => {
     if (data !== nextData) {
       if (shouldStartAnimating) {
-        console.log(shouldStartAnimating);
         startTransition(nextData);
       } else {
         setData(nextData);
