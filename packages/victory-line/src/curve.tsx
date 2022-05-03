@@ -1,4 +1,4 @@
-import { Path, useVictoryState } from '@victory/core';
+import { Path } from '@victory/core';
 import { Coordinates, ForAxes, ScaleFn } from '@victory/core/dist/types';
 import * as d3 from 'd3';
 import * as React from 'react';

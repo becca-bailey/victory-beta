@@ -9,6 +9,8 @@ export type Coordinates = ForAxes<ChartData>;
 
 type OtherData = { [key: string]: any };
 
+type ID = string;
+
 export type Datum = Coordinates & OtherData;
 
 export type Padding = {
@@ -96,10 +98,10 @@ export type ContextType = {
   domain: ForAxes<Extent>;
   scale: ForAxes<ScaleFn>;
   animate: AnimatePropType | undefined;
-  setData: (id: string, data: Datum[]) => void;
-  getData: (id: string) => Datum[];
-  getState: (id: string) => ChartState;
-  startTransition: (id: string, data: Datum[]) => void;
-  endTransition: (id: string) => void;
-  shouldStartAnimating: (id: string) => boolean;
+  setData: (id: ID, data: Datum[]) => void;
+  getData: (id: ID) => Datum[];
+  getChartState: (id: ID) => ChartState;
+  startTransition: (id: ID, data: Datum[]) => void;
+  endTransition: (id: ID) => void;
+  shouldStartAnimating: (id: ID) => boolean;
 };

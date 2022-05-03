@@ -43,8 +43,8 @@ export function useChartState(id: string, _nextData: Datum[]) {
   const { animating, previousData, nextData, duration } = useContextSelector<
     ContextType,
     ChartState
-  >(VictoryContext, ({ getState }) => {
-    return getState(id);
+  >(VictoryContext, ({ getChartState }) => {
+    return getChartState(id);
   });
 
   // Transitions between data states

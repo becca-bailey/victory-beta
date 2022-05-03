@@ -164,7 +164,7 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       [dispatch]
     );
 
-    const getState = React.useCallback<(id: string) => ChartState>(
+    const getChartState = React.useCallback<(id: string) => ChartState>(
       (id: string) => {
         return state.chartStates[id] || DEFAULT_STATE;
       },
@@ -173,10 +173,10 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
 
     const getData = React.useCallback<(id: string) => Datum[]>(
       (id: string) => {
-        const state = getState(id);
+        const state = getChartState(id);
         return state.data;
       },
-      [getState]
+      [getChartState]
     );
 
     const startTransition = React.useCallback(
@@ -229,7 +229,7 @@ const VictoryStateProvider: React.FunctionComponent<VictoryStateProviderProps> =
       startTransition,
       endTransition,
       shouldStartAnimating,
-      getState,
+      getChartState,
     };
 
     return (
